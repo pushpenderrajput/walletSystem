@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:15
+    container_name: wallet-db
+    restart: always
+    environment:
+      POSTGRES_DB: wallet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pushpender
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: wallet-app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/wallet
+      DB_USER: postgres
+      DB_PASSWORD: pushpender
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
